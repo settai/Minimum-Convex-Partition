@@ -5,7 +5,7 @@ Lib = graphics.cma str.cma
 prog : graph.cmo scanner.cmo
 	ocamlc -o prog $(Lib) scanner.cmo graph.cmo
 
-graph.cmo : scanner.cmo
+graph.cmo : scanner.cmo graph.ml
 	ocamlc -c scanner.cmo graph.ml 
 	
 scanner.cmo : scanner.ml

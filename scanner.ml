@@ -1,10 +1,17 @@
-open Str
-
 type point = {
     i : int;
-	x : int;
+    x : int;
     y : int
-};;
+}
+
+let get_i = fun point ->
+        point.i
+
+let get_x = fun point ->
+        point.x
+
+let get_y = fun point ->
+        point.y
 
 let load_file f =
     let ic = open_in f in
@@ -12,7 +19,7 @@ let load_file f =
     let s = Bytes.create n in
     really_input ic s 0 n;
     close_in ic;
-    (s);;
+    (s)
 
 let rec remove = fun x l ->
       match l with
