@@ -17,8 +17,7 @@ The complexity of this problem is still unknown, but approximation algorithms ha
 
 ### Source
 
-https://cgshop.ibr.cs.tu-bs.de/static/competitions/cgshop_2020/solution-example.svg
-
+https://cgshop.ibr.cs.tu-bs.de/competition/cg-shop-2020/
 
 ## Compiling
 
