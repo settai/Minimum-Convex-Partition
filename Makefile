@@ -2,15 +2,24 @@
 
 Lib = graphics.cma str.cma
 
-prog : graph.cmo scanner.cmo
-	ocamlc -o prog $(Lib) scanner.cmo graph.cmo
+prog : main.cmo
+	ocamlc -o prog $(Lib) types.cmo scanner.cmo graph.cmo triangle.cmo main.cmo
 
-graph.cmo : scanner.cmo graph.ml
-	ocamlc -c scanner.cmo graph.ml 
-	
-scanner.cmo : scanner.ml
-	ocamlc -c str.cma scanner.ml
+triangle.cmo : types.cmo
+	ocamlc -c types.cmo triangle.ml
 
-# Clean 
+main.cmo : types.cmo graph.cmo scanner.cmo triangle.cmo
+	ocamlc -c types.cmo graph.cmo scanner.cmo triangle.cmo main.ml
+
+types.cmo : types.ml
+	ocamlc -c types.ml
+
+graph.cmo : types.cmo graph.ml
+	ocamlc -c types.cmo graph.ml
+
+scanner.cmo : types.cmo scanner.ml
+	ocamlc -c str.cma types.cmo scanner.ml
+
+# Clean
 clean:
 	rm -f prog *.cm[io] *~

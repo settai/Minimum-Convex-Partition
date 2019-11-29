@@ -1,8 +1,4 @@
-type point = {
-    i : int;
-    x : int;
-    y : int
-}
+open Types
 
 let get_i = fun point ->
         point.i
