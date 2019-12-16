@@ -1,14 +1,13 @@
 open Types
 
-let () = 
-    Graphics.open_graph "";
+let () =     
+    let points = (Scanner.input_points Sys.argv.(1)) in
+	Graphics.open_graph "";
     ignore(Graphics.wait_next_event [Key_pressed]);
-    
-    let points = (Scanner.input_points "points.json") in
     Graph.plot_graph {points=points; edges=[]};
     ignore(Graphics.wait_next_event [Key_pressed]);
     
-    let edges = Triangle.tri_to_edge (Triangle.triangulation points) in
+    let edges = Triangle.delaunay points in
     let test = {points=points; edges=edges} in
     Graph.plot_graph test;
     ignore(Graphics.wait_next_event [Key_pressed]);

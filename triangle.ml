@@ -116,10 +116,22 @@ let triangulation pts =
         in
     aux pts debut;;
 
-
-
-
-
-
+let delaunay = fun points ->
+    let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
+    let to_edges = fun arcs_array ->
+        let arcs = Array.to_list arcs_array in
+        let list_vert = List.map ( fun arc -> match arc.Delaunay.Int.vert, arc.next.vert with
+            			Delaunay.Int.Point p1 , Delaunay.Int.Point p2  -> (p1,p2)
+            			| Delaunay.Int.Infinity,_ | _,Delaunay.Int.Infinity -> (-1,-1)) arcs in
+		let rec to_edges_rec = fun list_vert edges_out ->
+			match list_vert with
+				[] -> List.rev edges_out
+				| (-1,-1)::es -> to_edges_rec es edges_out
+				| e::es -> to_edges_rec es (e::edges_out)
+		in
+		to_edges_rec list_vert []
+    in
+    to_edges triangulation.arcs
+        
 
 

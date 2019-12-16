@@ -3,7 +3,9 @@ open Types;;
 let rec find_point = fun pts i ->
         match pts with
         p::ps -> if p.i = i then p
-                   else find_point ps i 
+                   else find_point ps i
+
+	| [] -> failwith "pas de points"
 
 let calc_pos = fun x min max size ->
         ((x-min) * (size-50) / (max-min))+25
