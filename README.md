@@ -25,3 +25,8 @@ https://cgshop.ibr.cs.tu-bs.de/competition/cg-shop-2020/
 ~/Minimum-Convex-Partition$ make
 ```
 
+## Execute
+
+```
+~/Minimum-Convex-Partition$ ./prog "pointfile.json"
+```
