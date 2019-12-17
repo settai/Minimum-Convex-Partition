@@ -11,4 +11,6 @@ type graph = {
         edges  : edge list
 }
 
-type triangle = point * point * point;;
+type triangle = point * point * point
+
+type polygone = int list

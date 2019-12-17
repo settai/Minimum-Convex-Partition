@@ -1,4 +1,5 @@
 open Types
+exception Poly_found of polygone
 
 let vecteur = fun a b ->
     (b.x-a.x,b.y-a.y) ;;
@@ -116,22 +117,165 @@ let triangulation pts =
         in
     aux pts debut;;
 
-let delaunay = fun points ->
+
+let delaunay_to_edges = fun points ->
     let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
     let to_edges = fun arcs_array ->
         let arcs = Array.to_list arcs_array in
         let list_vert = List.map ( fun arc -> match arc.Delaunay.Int.vert, arc.next.vert with
             			Delaunay.Int.Point p1 , Delaunay.Int.Point p2  -> (p1,p2)
-            			| Delaunay.Int.Infinity,_ | _,Delaunay.Int.Infinity -> (-1,-1)) arcs in
-		let rec to_edges_rec = fun list_vert edges_out ->
+            			| Delaunay.Int.Infinity,_ | _,Delaunay.Int.Infinity -> (-1,-1)) arcs
+        in
+        let rec remove_double = fun d_edges edges ->
+            match d_edges with 
+            [] -> edges
+            | (p1,p2)::es when not (List.exists (fun (q1,q2) -> q1=p2 && q2=p1) edges) -> remove_double es ((p1,p2)::edges)
+            | _::es -> remove_double es edges
+        in
+        let rec to_edges_rec = fun list_vert edges_out ->
 			match list_vert with
-				[] -> List.rev edges_out
+				[] -> edges_out
 				| (-1,-1)::es -> to_edges_rec es edges_out
 				| e::es -> to_edges_rec es (e::edges_out)
 		in
-		to_edges_rec list_vert []
+		remove_double (to_edges_rec list_vert []) []
     in
     to_edges triangulation.arcs
-        
 
+let is_convex = fun points poly->
+    if (List.length poly) < 4 then true
+    else 
+    let p1 = (List.hd poly) and p2 = (List.hd (List.tl poly)) and p3 = (List.hd (List.tl (List.tl poly))) in
+    let pt1 = (Graph.find_point points p1) and pt2 = (Graph.find_point points p2) and pt3 = (Graph.find_point points p3) in
+    let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
+    let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
+    let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
+    let sign = (zcrossproduct>0) in
+    let rec is_convex_rec = fun poly ->
+        match poly with
+            [] -> true
+            | pn::[] -> let pt1 = (Graph.find_point points pn) and pt2 = (Graph.find_point points p1) and pt3 = (Graph.find_point points p2) in
+                        let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
+                        let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
+                        let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
+                        if (sign != (zcrossproduct>0)) then false
+            else true
+            | pn1::pn::[] ->    let pt1 = (Graph.find_point points pn1) and pt2 = (Graph.find_point points pn) and pt3 = (Graph.find_point points p1) in
+                                let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
+                                let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
+                                let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
+                                if (sign != (zcrossproduct>0)) then false
+                                else is_convex_rec ([pn])
+            | p1::p2::p3::ps -> let pt1 = (Graph.find_point points p1) and pt2 = (Graph.find_point points p2) and pt3 = (Graph.find_point points p3) in
+                                let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
+                                let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
+                                let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
+                                if (sign != (zcrossproduct>0)) then false
+                                else is_convex_rec (p2::p3::ps)
+    in is_convex_rec poly
 
+let poly_fusion = fun polygone1 polygone2 ->
+    let rotate_poly = fun poly ->
+        let last = List.hd (List.rev poly) in
+        let rec init = function
+        | [] -> []
+        | [x] -> []
+        | x::xs -> x::(init xs)
+        in last::(init poly) 
+    in
+    let n1 = List.length polygone1 and n2 = List.length polygone2 in
+    let poly1 = ref polygone1 and poly2 = ref polygone2 in
+    let poly_found = fun () ->
+        for count1 = 1 to n1 do
+            begin
+            match !poly1 with
+                p11::p12::ps -> 
+                    for count2 = 1 to n2 do
+                        match !poly2 with
+                            p21::p22::ps -> 
+                                if p21 = p11 && p22 = p12 then 
+                                    let ph1 = List.hd !poly1 and pt1 = List.tl !poly1 and polytail = List.rev (List.tl (List.tl !poly2)) in raise (Poly_found (pt1@[ph1]@polytail))
+                                else if p21 = p12 && p22 = p11 then 
+                                    let ph1 = List.hd !poly1 and pt1 = List.tl !poly1 and polytail = List.tl (List.tl !poly2) in raise (Poly_found (pt1@[ph1]@polytail))
+                                else poly2 := rotate_poly !poly2
+                            | _ -> failwith "Invalid polygone"
+                    done
+                | _ -> failwith "Invalid polygone"
+            end;
+            poly1 := rotate_poly !poly1   
+        done;
+        failwith "Fusion failed"
+    in 
+    try (poly_found ())
+    with  Poly_found poly -> poly
+
+let delaunay_to_polygones = fun points ->
+    let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
+    let to_polygones = fun arcs_array ->
+        let arcs = Array.to_list arcs_array in
+        let list_polygones = List.map ( fun arc -> match arc.Delaunay.Int.vert, arc.next.vert, arc.next.next.vert with
+            			Delaunay.Int.Point p1 , Delaunay.Int.Point p2 , Delaunay.Int.Point p3 -> [p1;p2;p3]
+            			| _ -> []) arcs
+        in
+        let rec to_polygones_rec = fun list_polygones polygones_out ->
+			match list_polygones with
+				[] -> polygones_out
+				| []::ps -> to_polygones_rec ps polygones_out
+				| p::ps -> to_polygones_rec ps (p::polygones_out)
+		in
+        let rec remove_double = fun d_polygones polygones ->
+            match d_polygones with 
+            [] -> polygones
+            | p::ps ->  begin
+                        match p with         (* Test if the triangle already exist*)
+                        p1::p2::p3::[] ->      if (List.exists (fun (q1::q2::q3::[]) -> 
+                                                (p1=q1 || p2=q1 || p3 = q1) && 
+                                                (p1=q2 || p2=q2 || p3 = q2) && 
+                                                (p1=q3 || p2=q3 || p3 = q3)) polygones)
+                                            then remove_double ps polygones
+                                            else remove_double ps (p::polygones)
+                        | _ -> failwith "error delaunay to polygone"
+                        end          
+            | _::ps -> remove_double ps polygones
+        in  
+        (* to_polygones_rec list_polygones [] *)
+		remove_double (to_polygones_rec list_polygones []) []
+    in
+    to_polygones triangulation.arcs
+
+let exists_in_poly = fun a b poly->
+    (List.exists (fun x -> x=a) poly) && (List.exists (fun x -> x=b) poly)
+
+let remove_poly = fun poly list_poly ->
+    let rec remove_poly_rec = fun list_poly new_list ->
+        match list_poly with
+        [] -> new_list
+        | p::ps when p=poly -> remove_poly_rec ps new_list
+        | p::ps -> remove_poly_rec ps (p::new_list)
+    in remove_poly_rec list_poly []
+    
+let poly_to_edges = fun polygone ->
+    let rec poly_to_edges_rec = fun poly edges->
+        match poly with 
+        [] -> []
+        | pn::[] -> (pn,(List.hd polygone))::edges
+        | p1::p2::ps -> poly_to_edges_rec (p2::ps) ((p1,p2)::edges)
+    in poly_to_edges_rec polygone []
+
+let poly_reduction = fun list_polygones points->
+    let list_poly = ref list_polygones in
+    let list_edges = List.concat (List.map poly_to_edges !list_poly) in
+    let rec poly_reduction_rec = fun edges ->
+        match edges with 
+        [] -> List.concat (List.map poly_to_edges !list_poly)
+        | (a,b)::es ->  let p = List.filter (exists_in_poly a b) !list_poly in
+                        begin 
+                        match p with
+                        p1::p2::_ ->
+                            let poly = poly_fusion p1 p2 in
+                            (* Printf.printf "%B" (is_convex points poly); *)
+                            if (is_convex points poly) then list_poly := (poly::(remove_poly p2 (remove_poly p1 !list_poly)));
+                            poly_reduction_rec es
+                        | _ -> poly_reduction_rec es
+                        end
+    in poly_reduction_rec list_edges
