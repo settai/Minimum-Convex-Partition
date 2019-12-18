@@ -41,7 +41,7 @@ let to_points = fun s ->
      to_points_rec s []
 
 let input_points = fun file_name ->
-    let s = strip_string (load_file file_name) in
+    let s = strip_string (Bytes.to_string (load_file file_name)) in
     Str.search_forward (Str.regexp "\\[.*\\]") s 0;
     let str_points = Str.matched_string s  in
     let list_val = extract_val str_points in

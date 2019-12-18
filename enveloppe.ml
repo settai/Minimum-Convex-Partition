@@ -1,3 +1,5 @@
+open Types
+
 exception NoLuck_or_CorruptedData;;
 
 let abs x = if x >= 0 then x else -x;;
@@ -74,10 +76,11 @@ let enveloppe_convexe_graham graphe =
 
 let enveloppe_convexe graphe = 
     let result,pivot = enveloppe_convexe_graham graphe in 
-    let rec construct graphe result pivot = match result with
-    |h::[] -> {points = (graphe.points) ; edges = (h.i, pivot.i)::(graphe.edges)}
-    |h1::h2::t -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot
-    in construct graphe result pivot;;
+    let rec construct graphe result pivot acc = match result,acc with
+    |[h],acc -> {points = (graphe.points) ; edges = (h.i, acc.i)::(graphe.edges)}
+    |h1::h2::t,acc when acc.i = (-1) -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot h1
+    |h1::h2::t,acc -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot acc
+    in construct graphe result pivot {i=(-1); x = 666; y = 666};;
     
 
 

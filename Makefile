@@ -3,13 +3,13 @@
 Lib = graphics.cma str.cma
 
 prog : main.cmo
-	ocamlc -o prog $(Lib) types.cmo scanner.cmo graph.cmo triangle.cmo main.cmo
+	ocamlc -o prog $(Lib) types.cmo scanner.cmo graph.cmo enveloppe.cmo main.cmo
 
-triangle.cmo : types.cmo
-	ocamlc -c types.cmo triangle.ml
+enveloppe.cmo : types.cmo
+	ocamlc -c types.cmo enveloppe.ml
 
-main.cmo : types.cmo graph.cmo scanner.cmo triangle.cmo
-	ocamlc -c types.cmo graph.cmo scanner.cmo triangle.cmo main.ml
+main.cmo : types.cmo graph.cmo scanner.cmo enveloppe.cmo
+	ocamlc -c types.cmo graph.cmo scanner.cmo enveloppe.cmo main.ml
 
 types.cmo : types.ml
 	ocamlc -c types.ml
