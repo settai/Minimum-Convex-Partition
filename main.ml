@@ -7,7 +7,8 @@ let () =
     Graph.plot_graph {points=points; edges=[]};
     ignore(Graphics.wait_next_event [Key_pressed]);
     
-    let edges = Triangle.poly_reduction (Triangle.delaunay_to_polygones points) points in
+    (* let edges = Triangle.poly_reduction (Triangle.delaunay_to_polygones points) points in *)
+    let edges = Triangle.poly_reduction (Triangle.points_to_poly (Triangle.triangulation points)) points in
     let test = {points=points; edges=edges} in
     Graph.plot_graph test;
     ignore(Graphics.wait_next_event [Key_pressed]);

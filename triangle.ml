@@ -1,6 +1,10 @@
 open Types
 exception Poly_found of polygone
 
+open Enveloppe_convexe
+
+exception Error;; 
+
 let vecteur = fun a b ->
     (b.x-a.x,b.y-a.y) ;;
 
@@ -44,35 +48,23 @@ let est_triangle = fun a b c ->
     not (alignes a b c) ;;
 
 
+(*Prends en entree un triangle et un point et renvoie un booleen pour indiquer si le point est dans le triangle ou non*)
+let est_dans_triangle [a;b;c] m =
+    if ((((determinant (vecteur m a) (vecteur m b)) * (determinant (vecteur m b) (vecteur m c))) >= 0) && (((determinant (vecteur m b) (vecteur m c)) * (determinant (vecteur m c) (vecteur m a))) >= 0))then  true else false ;;
 
-let rec est_dans_triangle = fun (a , b , c ) m ->
-    if (((determinant (vecteur m a) (vecteur m b)) * (determinant (vecteur m b) (vecteur m c)) >= 0) && ((determinant (vecteur m b) (vecteur m c)) * (determinant (vecteur m c) (vecteur m a)) >= 0)) then true else false ;;
-
-let rec strict_dans_triangle = fun (a , b , c ) m ->
-    if (((determinant (vecteur m a) (vecteur m b)) * (determinant (vecteur m a) (vecteur m b)) > 0) && ((determinant (vecteur m b) (vecteur m c)) * (determinant (vecteur m c) (vecteur m a)) >0)) then true else false ;;
+let strict_dans_triangle  [a;b;c] m =
+    if (((determinant (vecteur m a) (vecteur m b)) * (determinant (vecteur m b) (vecteur m c)) > 0) && ((determinant (vecteur m b) (vecteur m c)) * (determinant (vecteur m c) (vecteur m a)) >0)&& ((determinant (vecteur m c) (vecteur m a)) * (determinant (vecteur m a) (vecteur m b)) >= 0)) then true else false ;;
     
-    
-(*let rec triangle = fun k pt pd ->
-    match k with 
-    [] -> (pd , pd , pd)
-    |a::b -> if (est_dans_triangle a pt) then begin 
-                  let k=b in
-                  let pas_int = a in
-                  pas_int
-                  end;
-                  else  triangle k pt pd;;*)
 
-let rec debut_Delauney = fun t l pa pb pc ->
-    match t with 
-    [] -> (pa,pb,pc)
-    |a::h -> if est_dans_triangle (pa , pb , pc ) a then debut_Delauney h l pa pb pc else begin
-     let pa2 = {i=pa.i; x=pa.x; y=(pa.y+1)} in
-     let pb2 = {i=pb.i; x=(pb.x-1); y=(pb.y-1)} in
-     let pc2 = {i=pc.i; x=(pc.x+1); y=(pc.y-1)} in
-     debut_Delauney l l pa2 pb2 pc2
-     end;; 
+(*Prends en entrée une liste de points et renvoie les points de l'enveloppe sous forme de l'enveloppe*) 
+let rec obtention_enveloppe = fun ens_pts ->
+    let graphe = {points = ens_pts; edges= [] } in
+    let (liste,pivot) = enveloppe_convexe_graham graphe in
+    liste;;
 
 
+
+(* Prends en entrée 3 triangle et une liste de points à l'intérieur de ces triangles et renvoie 3 listes de point à l'intérieur de chaque triangle*)
 let split = fun triangle1 triangle2 triangle3 liste ->
     let rec split_rec = fun t1 t2 t3 l l1 l2 l3 ->
         match l with
@@ -81,12 +73,44 @@ let split = fun triangle1 triangle2 triangle3 liste ->
         in split_rec triangle1 triangle2 triangle3 liste [] [] [];;
 
 
-let split_triangle (a, b, c) p = 
-    (a, b, p), (a, p, c), (p, b, c);;
+
+(* Prends en entrée une liste de triangle [a,b,c,...] et une liste de points à l'intérieur de ces triangles et renvoie une liste de liste de point à l'intérieur de chque triangle*)
+let split2 = fun liste_triangle liste ->
+    let liste_ptsint = [] in
+    let rec aux = fun triangle_liste l l_copie pt_liste acc-> 
+        match l,triangle_liste with 
+        |_,[] -> pt_liste
+        |[],h::t-> let pt_liste=(acc::pt_liste) in
+                    let acc = [] in 
+                    aux t l_copie l_copie pt_liste acc
+        |x::y,h::t -> if (est_dans_triangle h x) then aux (h::t) y l_copie pt_liste (x::acc) else aux (h::t) y l_copie pt_liste acc 
+     in aux liste_triangle liste liste liste_ptsint [];;
+
+                                                    
+
+
+(* Prends en entrée un triangle et un point et renvoie tous les triangles entre ce points et les
+points du polygone*)
+let split_triangle [a; b; c] p = 
+    [[a; b; p]; [a;p; c]; [p; b; c]];;
+
+
+(* Prends en entrée un polygone et un point et renvoie tous les triangles entre ce points et les
+points du polygone*)
+let split_liste_in_triangle poly pt = 
+    let rec aux l copy_l p res =
+        match l with 
+        [] -> List.rev res
+        |a::b::t -> aux (b::t) copy_l p ([a;b;p]::res)
+        |b::[] -> match copy_l with 
+                    a::t -> aux [] copy_l p ([a;b;p]::res)
+                    |_ -> raise Error
+     in aux poly poly pt [];;
+        
 
 let tri_to_edge triangles = 
     let edges = ref [] in 
-    List.iter (fun (a, b, c) -> 
+    List.iter (fun [a;b;c] -> 
         if (a.i >= 0) && (b.i >= 0) then
             edges := (a.i, b.i)::(!edges);
         if (b.i >= 0) && (c.i >= 0) then
@@ -98,25 +122,51 @@ let tri_to_edge triangles =
 
 let print_triangle (a, b, c) = Printf.printf "(%d, %d, %d)\n" a.i b.i c.i;;
 
-let triangulation pts = 
-    List.iter (fun x -> Printf.printf "(%d, %d, %d)\n" x.i x.x x.y) pts;
-    let pa = {i= -1 ; x = 0 ; y = 1} in 
-    let pb = {i= -2 ; x = -1 ; y = -1} in
-    let pc = {i= -3 ; x = 1 ; y = -1} in
-    let debut = debut_Delauney pts pts pa pb pc in
-    let rec aux ps triangle = 
+(* Prend en entrée un elt et une liste et renvoie un booleen signifiant que l elt est dans la liste*)
+let rec in_list = fun elt liste1 ->
+    match liste1 with
+    [] -> false
+    |h::t -> if (elt=h) then true else in_list elt t;;
+
+
+let virer_doublon = fun liste1  liste2 ->
+    let rec aux = fun l1 l2 res ->
+        match l1 with 
+        [] -> res
+        |h::t -> if (in_list h l2) then aux t l2 res else aux t l2 (h::res)
+    in 
+    aux liste1  liste2 [];;
+
+
+let rec deuxieme_partie_triangulation ps triangle = 
         match ps with
         |[] -> [triangle]
-        |p::q -> let t1,t2,t3 = split_triangle triangle p in
+        |p::q -> let [t1;t2;t3] = split_triangle triangle p in
                     let ps1, ps2, ps3 = split t1 t2 t3 q in
-                    print_triangle t1; print_triangle t2; print_triangle t3;
-                    Printf.printf "[" ; List.iter (fun x -> Printf.printf "%d " x.i) ps1; Printf.printf "]\n";
-                    Printf.printf "[" ; List.iter (fun x -> Printf.printf "%d " x.i) ps2; Printf.printf "]\n";
-                    Printf.printf "[" ; List.iter (fun x -> Printf.printf "%d " x.i) ps3; Printf.printf "]\n";
-                    (aux ps1 t1)@(aux ps2 t2)@(aux ps3 t3)
-        in
-    aux pts debut;;
+                    (deuxieme_partie_triangulation ps1 t1)@(deuxieme_partie_triangulation ps2 t2)@(deuxieme_partie_triangulation ps3 t3);;
 
+
+let det_pt_int = fun triangle file_pts ->
+            let rec aux file pint tri =
+                            match file with
+                            [] -> pint 
+                            |h::t -> if est_dans_triangle tri h then aux t (h::pint) tri else  aux t pint tri
+               in aux file_pts [] triangle;;
+
+let rec fin_triangulation = fun li1 li2 res ->
+        match li1 with 
+        [] -> res
+        |x::y -> fin_triangulation y li2 ((deuxieme_partie_triangulation (det_pt_int x li2) x)@res);;           
+
+let triangulation pts = 
+    let enveloppe = obtention_enveloppe pts in
+    let pts_filtre = virer_doublon pts enveloppe in
+    match pts_filtre with
+        [] -> [enveloppe]
+        |p::q -> fin_triangulation (split_liste_in_triangle enveloppe p) q [] ;;
+
+let points_to_poly = fun points_list ->
+    List.map (fun points -> List.map (fun point -> point.i) points) points_list
 
 let delaunay_to_edges = fun points ->
     let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
