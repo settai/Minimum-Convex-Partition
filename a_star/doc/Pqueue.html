@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Memory.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star : Pqueue</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Memory.html" title="Memory">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Pqueue.html">Pqueue</a></h1>
+
+<pre><span class="keyword">module</span> Pqueue: <code class="code">sig</code> <a href="Pqueue.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Priority queues : elements are inserted in the queue according to their priority. In this implementation, the extraction operation returns the element of lowest numerical value for the priority. A priority queue can be used to store the nodes that remain to be explored, when performing a tree search.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">('a, 'b)</code> t</span> </pre>
+<div class="info ">
+The priority queue type. A priority queue contains elements of type <code class="code">'b</code>, inserted into the queue according to its priority. A priority is of type <code class="code">'a</code>.<br>
+</div>
+
+
+<pre><span id="EXCEPTIONEmpty"><span class="keyword">exception</span> Empty</span></pre>
+<div class="info ">
+This exception is raised when trying to extract an element from an empty priority queue.<br>
+</div>
+
+<pre><span id="VALempty"><span class="keyword">val</span> empty</span> : <code class="type">('a, 'b) <a href="Pqueue.html#TYPEt">t</a></code></pre><div class="info ">
+An empty priority queue.<br>
+</div>
+
+<pre><span id="VALis_empty"><span class="keyword">val</span> is_empty</span> : <code class="type">('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">is_empty q</code> returns <code class="code">true</code> is <code class="code">q</code> is empty, and false otherwise.<br>
+</div>
+
+<pre><span id="VALcardinal"><span class="keyword">val</span> cardinal</span> : <code class="type">('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">cardinal q</code> returns the number of elements in the priority queue <code class="code">q</code>.<br>
+</div>
+
+<pre><span id="VALinsert"><span class="keyword">val</span> insert</span> : <code class="type">?cmp:('a -> 'a -> int) -> 'a -> 'b -> ('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> ('a, 'b) <a href="Pqueue.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">insert cmp prio x q</code> inserts <code class="code">x</code> in the priority queue <code class="code">q</code> according to its priority <code class="code">prio</code>, and returns the resulting updated priority queue. <code class="code">cmp</code> is the function comparing two priorities (<code class="code">cmp</code> default value is <code class="code">compare</code>).<br>
+</div>
+
+<pre><span id="VALextract"><span class="keyword">val</span> extract</span> : <code class="type">?cmp:('a -> 'a -> int) -> ('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> 'a * 'b * ('a, 'b) <a href="Pqueue.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">extract q</code> returns a tuple <code class="code">(prio,x,new_q)</code> where <code class="code">x</code> is the element of lower value for <code class="code">prio</code> extracted from the priority queue <code class="code">q</code>, and <code class="code">new_q</code> is the priority queue after removal of <code class="code">x</code>.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">('a -> 'b -> unit) -> ('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+<code class="code">iter f q</code> applies function <code class="code">f</code> to the elements of <code class="code">q</code>, ordered by priority<br>
+</div>
+
+<pre><span id="VALelements"><span class="keyword">val</span> elements</span> : <code class="type">?cmp:('a -> 'a -> int) -> ('a, 'b) <a href="Pqueue.html#TYPEt">t</a> -> 'b list</code></pre><div class="info ">
+<code class="code">elements q</code> returns the elements of <code class="code">q</code> ordered by priority<br>
+</div>
+</body></html>

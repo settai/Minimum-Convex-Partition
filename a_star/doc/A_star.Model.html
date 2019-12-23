@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="A_star.Astar.html">
+<link rel="Up" href="A_star.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star : A_star.Model</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="A_star.html" title="A_star">Up</a>
+&nbsp;<a class="post" href="A_star.Astar.html" title="A_star.Astar">Next</a>
+</div>
+<h1>Module type <a href="type_A_star.Model.html">A_star.Model</a></h1>
+
+<pre><span class="keyword">module type</span> Model = <code class="code">sig</code> <a href="A_star.Model.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> </pre>
+
+
+<pre><span id="TYPEuser_param"><span class="keyword">type</span> <code class="type"></code>user_param</span> </pre>
+
+
+<pre><span id="VALinitial_state"><span class="keyword">val</span> initial_state</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a></code></pre>
+<pre><span id="VALis_goal"><span class="keyword">val</span> is_goal</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> bool</code></pre>
+<pre><span id="VALnext"><span class="keyword">val</span> next</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> <a href="A_star.Model.html#TYPEstate">state</a> list</code></pre>
+<pre><span id="VALk"><span class="keyword">val</span> k</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> float</code></pre>
+<pre><span id="VALh"><span class="keyword">val</span> h</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> float</code></pre>
+<pre><span id="VALdo_at_insertion"><span class="keyword">val</span> do_at_insertion</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> unit</code></pre>
+<pre><span id="VALdo_at_extraction"><span class="keyword">val</span> do_at_extraction</span> : <code class="type"><a href="A_star.Model.html#TYPEuser_param">user_param</a> -><br>       (<a href="A_star.html#TYPEprio">A_star.prio</a>, <a href="A_star.Model.html#TYPEstate">state</a>) <a href="Pqueue.html#TYPEt">Pqueue.t</a> -><br>       <a href="A_star.Model.html#TYPEstate">state</a> <a href="Memory.html#TYPEt">Memory.t</a> -> <a href="A_star.Model.html#TYPEstate">state</a> -> unit</code></pre></body></html>

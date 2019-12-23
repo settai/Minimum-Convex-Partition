@@ -1,0 +1,9 @@
+a_star.cmo : pqueue.cmi memory.cmi a_star.cmi
+a_star.cmx : pqueue.cmx memory.cmx a_star.cmi
+a_star.cmi : pqueue.cmi memory.cmi
+memory.cmo : memory.cmi
+memory.cmx : memory.cmi
+memory.cmi :
+pqueue.cmo : pqueue.cmi
+pqueue.cmx : pqueue.cmi
+pqueue.cmi :

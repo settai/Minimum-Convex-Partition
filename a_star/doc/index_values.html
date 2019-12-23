@@ -1,0 +1,140 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star : Index of values</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
+<table>
+<tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Memory.html#VALalready_expanded">already_expanded</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">already_expanded memory u</code> returns <code class="code">true</code> is state <code class="code">u</code> has already been expanded.
+</div>
+</td></tr>
+<tr><td align="left"><br>C</td></tr>
+<tr><td><a href="Pqueue.html#VALcardinal">cardinal</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">cardinal q</code> returns the number of elements in the priority queue <code class="code">q</code>.
+</div>
+</td></tr>
+<tr><td><a href="Memory.html#VALclosed_list">closed_list</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">closed_list memory</code> returns the list of expanded states in <code class="code">memory</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>D</td></tr>
+<tr><td><a href="A_star.Model.html#VALdo_at_extraction">do_at_extraction</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td><a href="A_star.Model.html#VALdo_at_insertion">do_at_insertion</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>E</td></tr>
+<tr><td><a href="Pqueue.html#VALelements">elements</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">elements q</code> returns the elements of <code class="code">q</code> ordered by priority
+</div>
+</td></tr>
+<tr><td><a href="Memory.html#VALelements">elements</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">elements memory</code> returns the list of states in <code class="code">memory</code>
+</div>
+</td></tr>
+<tr><td><a href="Pqueue.html#VALempty">empty</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+An empty priority queue.
+</div>
+</td></tr>
+<tr><td><a href="Pqueue.html#VALextract">extract</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">extract q</code> returns a tuple <code class="code">(prio,x,new_q)</code> where <code class="code">x</code> is the element of lower value for <code class="code">prio</code> extracted from the priority queue <code class="code">q</code>, and <code class="code">new_q</code> is the priority queue after removal of <code class="code">x</code>.
+</div>
+</td></tr>
+<tr><td align="left"><br>G</td></tr>
+<tr><td><a href="Memory.html#VALget_cost">get_cost</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">get_cost memory u</code> returns the cost associated to <code class="code">u</code> in <code class="code">memory</code>.
+</div>
+</td></tr>
+<tr><td><a href="Memory.html#VALget_depth">get_depth</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">get_depth memory u</code> returns the depth of <code class="code">u</code> in the tree (i.e.
+</div>
+</td></tr>
+<tr><td><a href="Memory.html#VALget_path">get_path</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">get_path memory u</code> returns the list of successive states between the initial state and the current state <code class="code">u</code>, considering the history of state transitions stored in <code class="code">memory</code>.
+</div>
+</td></tr>
+<tr><td align="left"><br>H</td></tr>
+<tr><td><a href="A_star.Model.html#VALh">h</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>I</td></tr>
+<tr><td><a href="Memory.html#VALinit">init</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">init u0 c0</code> initializes a memory table with initial state <code class="code">u0</code> and its associated cost <code class="code">c0</code>.
+</div>
+</td></tr>
+<tr><td><a href="A_star.Model.html#VALinitial_state">initial_state</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pqueue.html#VALinsert">insert</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">insert cmp prio x q</code> inserts <code class="code">x</code> in the priority queue <code class="code">q</code> according to its priority <code class="code">prio</code>, and returns the resulting updated priority queue.
+</div>
+</td></tr>
+<tr><td><a href="Pqueue.html#VALis_empty">is_empty</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">is_empty q</code> returns <code class="code">true</code> is <code class="code">q</code> is empty, and false otherwise.
+</div>
+</td></tr>
+<tr><td><a href="A_star.Model.html#VALis_goal">is_goal</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td><a href="Pqueue.html#VALiter">iter</a> [<a href="Pqueue.html">Pqueue</a>]</td>
+<td><div class="info">
+<code class="code">iter f q</code> applies function <code class="code">f</code> to the elements of <code class="code">q</code>, ordered by priority
+</div>
+</td></tr>
+<tr><td align="left"><br>K</td></tr>
+<tr><td><a href="A_star.Model.html#VALk">k</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>M</td></tr>
+<tr><td><a href="Memory.html#VALmem">mem</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">mem memory u</code> returns true if element <code class="code">u</code> is in <code class="code">memory</code>
+</div>
+</td></tr>
+<tr><td align="left"><br>N</td></tr>
+<tr><td><a href="A_star.Model.html#VALnext">next</a> [<a href="A_star.Model.html">A_star.Model</a>]</td>
+<td></td></tr>
+<tr><td align="left"><br>S</td></tr>
+<tr><td><a href="A_star.Astar.html#VALsearch">search</a> [<a href="A_star.Astar.html">A_star.Astar</a>]</td>
+<td></td></tr>
+<tr><td><a href="A_star.html#VALsearch">search</a> [<a href="A_star.html">A_star</a>]</td>
+<td><div class="info">
+<code class="code">search user_fun u0 is_goal next k h</code> searches the state space using the A* algorithm, starting at initial state <code class="code">u0</code>.
+</div>
+</td></tr>
+<tr><td><a href="Memory.html#VALstore_state">store_state</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">store_state memory u cost father</code> stores the current state <code class="code">u</code> and its cost into <code class="code">memory</code>, as well as its parent state <code class="code">father</code>.
+</div>
+</td></tr>
+<tr><td align="left"><br>T</td></tr>
+<tr><td><a href="Memory.html#VALtag_as_expanded">tag_as_expanded</a> [<a href="Memory.html">Memory</a>]</td>
+<td><div class="info">
+<code class="code">tag_as_expanded memory u</code> memorizes the fact that <code class="code">u</code> has been expanded.
+</div>
+</td></tr>
+</table>
+</body>
+</html>

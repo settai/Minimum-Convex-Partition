@@ -165,9 +165,11 @@ let triangulation pts =
         [] -> [enveloppe]
         |p::q -> fin_triangulation (split_liste_in_triangle enveloppe p) q [] ;;
 
+(* is_convex : convertir points list en int list list*)
 let points_to_poly = fun points_list ->
     List.map (fun points -> List.map (fun point -> point.i) points) points_list
 
+(* delaunay_to_edges : adaptation de la triagulation de delaunay implemanter dans la bible pour notre structure*)
 let delaunay_to_edges = fun points ->
     let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
     let to_edges = fun arcs_array ->
@@ -192,38 +194,31 @@ let delaunay_to_edges = fun points ->
     in
     to_edges triangulation.arcs
 
+(* is_convex :  test si un polygone est convex, avec la liste de tous les cordonnes des points du polygone*)
 let is_convex = fun points poly->
+    let zcrossproduct = fun p1 p2 p3 ->
+        let pt1 = (Graph.find_point points p1) and pt2 = (Graph.find_point points p2) and pt3 = (Graph.find_point points p3) in
+        let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
+        let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
+        (dx1 * dy2 - dy1 * dx2) 
+    in
     if (List.length poly) < 4 then true
     else 
-    let p1 = (List.hd poly) and p2 = (List.hd (List.tl poly)) and p3 = (List.hd (List.tl (List.tl poly))) in
-    let pt1 = (Graph.find_point points p1) and pt2 = (Graph.find_point points p2) and pt3 = (Graph.find_point points p3) in
-    let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
-    let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
-    let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
-    let sign = (zcrossproduct>0) in
-    let rec is_convex_rec = fun poly ->
-        match poly with
-            [] -> true
-            | pn::[] -> let pt1 = (Graph.find_point points pn) and pt2 = (Graph.find_point points p1) and pt3 = (Graph.find_point points p2) in
-                        let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
-                        let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
-                        let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
-                        if (sign != (zcrossproduct>0)) then false
-            else true
-            | pn1::pn::[] ->    let pt1 = (Graph.find_point points pn1) and pt2 = (Graph.find_point points pn) and pt3 = (Graph.find_point points p1) in
-                                let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
-                                let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
-                                let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
-                                if (sign != (zcrossproduct>0)) then false
-                                else is_convex_rec ([pn])
-            | p1::p2::p3::ps -> let pt1 = (Graph.find_point points p1) and pt2 = (Graph.find_point points p2) and pt3 = (Graph.find_point points p3) in
-                                let dx1 = pt3.x - pt2.x and dy1 = pt3.y - pt2.y in
-                                let dx2 = pt1.x - pt2.x and dy2 = pt1.y - pt2.y in
-                                let zcrossproduct = (dx1 * dy2 - dy1 * dx2) in
-                                if (sign != (zcrossproduct>0)) then false
-                                else is_convex_rec (p2::p3::ps)
-    in is_convex_rec poly
+        let p1 = (List.hd poly) and p2 = (List.hd (List.tl poly)) and p3 = (List.hd (List.tl (List.tl poly))) in
+        let sign = ((zcrossproduct p1 p2 p3)>0) in
+        let rec is_convex_rec = fun poly ->
+            match poly with
+                [] -> true
+                | pn::[] -> (sign = ((zcrossproduct pn p1 p2)>0)) 
 
+                | pn1::pn::[] ->    if ((sign != ((zcrossproduct pn1 pn p1)>0)) ) then false
+                                    else is_convex_rec ([pn])
+
+                | p1::p2::p3::ps -> if ((sign != ((zcrossproduct p1 p2 p3)>0)) ) then false
+                                    else is_convex_rec (p2::p3::ps)
+        in is_convex_rec poly
+
+(* poly_fusion : fusionne deux polygone ayant un trait en commun *)
 let poly_fusion = fun polygone1 polygone2 ->
     let rotate_poly = fun poly ->
         let last = List.hd (List.rev poly) in
@@ -259,6 +254,7 @@ let poly_fusion = fun polygone1 polygone2 ->
     try (poly_found ())
     with  Poly_found poly -> poly
 
+(* delaunay_to_polygones : la triangulation de delaunay ayant comme sortie une liste de polygone qui represente la liste des triangles *)
 let delaunay_to_polygones = fun points ->
     let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
     let to_polygones = fun arcs_array ->
@@ -293,9 +289,11 @@ let delaunay_to_polygones = fun points ->
     in
     to_polygones triangulation.arcs
 
+(* exist_in_poly : test si le trait (a,b) exist dans un polygone*)
 let exists_in_poly = fun a b poly->
     (List.exists (fun x -> x=a) poly) && (List.exists (fun x -> x=b) poly)
 
+(* remove_poly : supprime un polygone de la liste des polygones*)
 let remove_poly = fun poly list_poly ->
     let rec remove_poly_rec = fun list_poly new_list ->
         match list_poly with
@@ -303,7 +301,8 @@ let remove_poly = fun poly list_poly ->
         | p::ps when p=poly -> remove_poly_rec ps new_list
         | p::ps -> remove_poly_rec ps (p::new_list)
     in remove_poly_rec list_poly []
-    
+
+(* poly_to_edges : transforme un polygone à une liste des traits *)
 let poly_to_edges = fun polygone ->
     let rec poly_to_edges_rec = fun poly edges->
         match poly with 
@@ -312,6 +311,7 @@ let poly_to_edges = fun polygone ->
         | p1::p2::ps -> poly_to_edges_rec (p2::ps) ((p1,p2)::edges)
     in poly_to_edges_rec polygone []
 
+(* poly_reduction : parcours la lists des polygones et pour chaque edge commun entre deux polygone il essaie si on peut l'enlever tout en gardant la convexité, la liste des points sert pour retrouver les cordonnés des references*)
 let poly_reduction = fun list_polygones points->
     let list_poly = ref list_polygones in
     let list_edges = List.concat (List.map poly_to_edges !list_poly) in

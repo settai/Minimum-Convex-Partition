@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star</title>
+</head>
+<body>
+<h1>A_star</h1>
+<center>David Gianazza</center>
+<center>Ecole Nationale de l'Aviation Civile</center>
+<center>Institut de Recherche en Informatique de Toulouse</center>
+<p>
+
+<h2 id="2_Presentation">Presentation</h2>
+<p>
+
+This is a library implementing an A* algorithm for tree-search or graph-search purposes. This algorithm implements a best-first search strategy with a heuristic.
+<p>
+
+A typical example of application of the A* algorithm is to find the shortest path between two points while avoiding obstacles. In this path-finding problem, a state is a path point. The cost function between two successive states can be chosen as the euclidian distance between two successive path points, and the heuristic can be the distance as the crow flies to the final destination.
+<p>
+
+The A* algorithm can be applied to many other problems, however. To allow you to customize the algorithm to your own needs, this library provides a generic A* algorithm in the form a functor taking as input a user-defined module. An example of implementation of such a module and of how to use the functor is given in subdirectory <code class="code">examples/PathFinder/</code>.
+<p>
+
+<h2 id="2_Installation">Installation</h2>
+<p>
+
+Download file <code class="code">A_star.zip</code> (or <code class="code">.tgz</code> or <code class="code">.gz</code>).
+<p>
+
+Decompress the file using <code class="code">unzip</code>, <code class="code">tar -zxf</code>, or <code class="code">gunzip</code>, depending on the file type.
+<p>
+
+Go to sub-directory <code class="code">A_star</code> and compile using command:
+<pre class="verbatim">&gt; make</pre>
+<p>
+
+This command creates library files <code class="code">a_star.cma</code> and <code class="code">a_star.cmxa</code>, as well as an HTML documentation that can be found in subdirectory <code class="code">doc/</code>
+<p>
+
+<h2 id="2_Usage">Usage </h2>
+<p>
+
+Use the A* library as any other Ocaml library. The <code class="code">A_star</code> module of the library provides a functor allowing you to implement your own version of the A* algorithm on your own model.
+<p>
+
+A simple example of how to do that is available in subdirectory <code class="code">examples/PathFinder/</code>. To see the example running, go to this subdirectory, compile using command <code class="code">make</code>, and run the executable <code class="code">findpath</code> or <code class="code">findpath.norm</code>.
+<p>
+
+<h2 id="2_Referencemanual">Reference manual </h2>
+<p>
+
+List of modules:
+<p>
+
+<br>
+<table class="indextable">
+<tr><td class="module"><a href="A_star.html">A_star</a></td><td><div class="info">
+An implementation of the A* algorithm, with a functorial interface.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Pqueue.html">Pqueue</a></td><td><div class="info">
+Priority queues : elements are inserted in the queue according to their priority.
+</div>
+</td></tr>
+<tr><td class="module"><a href="Memory.html">Memory</a></td><td><div class="info">
+Memory table to store and retrieve state data.
+</div>
+</td></tr>
+</table>
+
+<p>
+
+You may also refer to the following indexes:
+<p>
+
+<ul class="indexlist">
+<li><a href="index_types.html">Index of types</a></li>
+<li><a href="index_exceptions.html">Index of exceptions</a></li>
+<li><a href="index_values.html">Index of values</a></li>
+<li><a href="index_modules.html">Index of modules</a></li>
+<li><a href="index_module_types.html">Index of module types</a></li>
+</ul>
+
+<p>
+
+This documentation was produced with <code class="code">ocamldoc</code>:
+<pre class="verbatim">ocamldoc -html -t "A_star" -intro Intro -d [doc_directory] -hide Pervasives *.mli</pre>
+<p>
+
+<h2 id="2_Copyrightandlicense">Copyright and license</h2>
+<p>
+
+THIS SOFTWARE IS LICENSED UNDER LGPL v3 (<a href="http://www.gnu.org/licenses/lgpl.html">http://www.gnu.org/licenses/lgpl.html</a>)
+<p>
+
+LGPL v3 is a set of additional permissions added to version 3 of the GNU General Public License.  Please read carefully the following excerpted sections of the GPL v3 License.
+<p>
+
+15. Disclaimer of Warranty.
+<p>
+
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \ufffdAS IS\ufffd WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+<p>
+
+16. Limitation of Liability.
+<p>
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+<p>
+
+17. Interpretation of Sections 15 and 16.
+<p>
+
+If the disclaimer of warranty and limitation of liability provided above cannot be given local legal effect according to their terms, reviewing courts shall apply local law that most closely approximates an absolute waiver of all civil liability in connection with the Program, unless a warranty or assumption of liability accompanies a copy of the Program in return for a fee.<br>
+</body>
+</html>

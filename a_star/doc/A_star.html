@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Memory.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star : A_star</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Memory.html" title="Memory">Next</a>
+</div>
+<h1>Module <a href="type_A_star.html">A_star</a></h1>
+
+<pre><span class="keyword">module</span> A_star: <code class="code">sig</code> <a href="A_star.html">..</a> <code class="code">end</code></pre><div class="info module top">
+An implementation of the A* algorithm, with a functorial interface.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEstate"><span class="keyword">type</span> <code class="type">'a</code> state</span> = <code class="type">'a</code> </pre>
+
+
+<pre><code><span id="TYPEuser_fun"><span class="keyword">type</span> <code class="type">'a</code> user_fun</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuser_fun.do_at_extraction">do_at_extraction</span>&nbsp;: <code class="type">(float, 'a) <a href="Pqueue.html#TYPEt">Pqueue.t</a> -> 'a <a href="Memory.html#TYPEt">Memory.t</a> -> 'a <a href="A_star.html#TYPEstate">state</a> -> unit</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">do_at_extraction q memory u</code> should return <code class="code">unit</code>. The arguments of this function should be : <code class="code">q</code> the priority queue for the states that remain to be explored,  <code class="code">memory</code> the memory table storing all relevant state data, and <code class="code">u</code> the current node.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTuser_fun.do_at_insertion">do_at_insertion</span>&nbsp;: <code class="type">'a <a href="A_star.html#TYPEstate">state</a> -> 'a <a href="A_star.html#TYPEstate">state</a> -> unit</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><code class="code">do_at_insertion u v</code> should also return <code class="code">unit</code>. Its arguments are <code class="code">u</code> the current node, and <code class="code">v</code> a 'son' about to be inserted in the priority queue.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+The type for a user-chosen argument allowing to perform some actions, like printing or displaying information, at specific steps of the algorithm (extraction, or insertion of a node from/to the priority queue. <code class="code">user_fun</code> contains two functions that must be provided by the user for that purpose.<br>
+</div>
+
+
+<pre><span id="VALsearch"><span class="keyword">val</span> search</span> : <code class="type">'a <a href="A_star.html#TYPEuser_fun">user_fun</a> -><br>       'a <a href="A_star.html#TYPEstate">state</a> -><br>       ('a <a href="A_star.html#TYPEstate">state</a> -> bool) -><br>       ('a <a href="A_star.html#TYPEstate">state</a> -> 'a <a href="A_star.html#TYPEstate">state</a> list) -><br>       ('a <a href="A_star.html#TYPEstate">state</a> -> 'a <a href="A_star.html#TYPEstate">state</a> -> float) -><br>       ('a <a href="A_star.html#TYPEstate">state</a> -> float) -> 'a <a href="A_star.html#TYPEstate">state</a> list</code></pre><div class="info ">
+<code class="code">search user_fun u0 is_goal next k h</code> searches the state space using the A* algorithm, starting at initial state <code class="code">u0</code>. The search terminates at state <code class="code">u</code> when <code class="code">is_goal u</code> is true. The function returns the path (a list of states) between <code class="code">u0</code> and <code class="code">u</code> as a result. <code class="code">next</code> is the production rule allowing to produce the neighbors of the current state (i.e the 'sons' of the current 'father' node). <code class="code">k</code> is the function returning the cost of a transition from one state to another. <code class="code">h</code> is the heuristic function returning the estimated cost to reach the goal. <code class="code">user_fun</code> contains some functions that are called at specific steps of the algorithms, when extracting a node from the priority queue, or when inserting one. These functions can be defined by the user, so as to print or display all information that he/she wishes.<br>
+</div>
+
+<pre><span id="TYPEprio"><span class="keyword">type</span> <code class="type"></code>prio</span> = <code class="type">float</code> </pre>
+
+
+<pre><span class="keyword">module type</span> <a href="A_star.Model.html">Model</a> = <code class="code">sig</code> <a href="A_star.Model.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module type</span> <a href="A_star.Astar.html">Astar</a> = <code class="code">sig</code> <a href="A_star.Astar.html">..</a> <code class="code">end</code></pre>
+<pre><span class="keyword">module</span> <a href="A_star.Make.html">Make</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">M</code><code class="code"> : </code><code class="type"><a href="A_star.Model.html">Model</a></code><code class="code">) -&gt; </code><code class="type"><a href="A_star.Astar.html">Astar</a></code><code class="type">  with type state=M.state and type user_param= M.user_param</code></div></pre></body></html>

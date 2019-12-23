@@ -1,0 +1,33 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="A_star" rel="Chapter" href="A_star.html">
+<link title="Memory" rel="Chapter" href="Memory.html">
+<link title="Pqueue" rel="Chapter" href="Pqueue.html"><title>A_star : A_star.Model</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;state<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;user_param<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;initial_state&nbsp;:&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;is_goal&nbsp;:&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;next&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;list<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;k&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;float<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;h&nbsp;:&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;float<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;do_at_insertion&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;do_at_extraction&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.user_param&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">A_star</span>.prio,&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state)&nbsp;<span class="constructor">Pqueue</span>.t&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="constructor">Memory</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">A_star</span>.<span class="constructor">Model</span>.state&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+<span class="keyword">end</span></code></body></html>
