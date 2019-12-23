@@ -254,7 +254,7 @@ let poly_fusion = fun polygone1 polygone2 ->
     try (poly_found ())
     with  Poly_found poly -> poly
 
-(* delaunay_to_polygones : la triangulation de delaunay ayant comme sortie une liste de polygone qui represente la liste des triangles *)
+(* delaunay_to_polygones : la triangulation de delaunay ayant comme sortie une liste     de polygone qui represente la liste des triangles *)
 let delaunay_to_polygones = fun points ->
     let triangulation = Delaunay.Int.triangulate (Array.of_list points) in
     let to_polygones = fun arcs_array ->
