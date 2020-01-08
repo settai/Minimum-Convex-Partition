@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Scanner.html">
+<link rel="Up" href="index.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Graph" rel="Chapter" href="Graph.html">
+<link title="Scanner" rel="Chapter" href="Scanner.html"><title>Graph</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Scanner.html" title="Scanner">Next</a>
+</div>
+<h1>Module <a href="type_Graph.html">Graph</a></h1>
+
+<pre><span class="keyword">module</span> Graph: <code class="code">sig</code> <a href="Graph.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Les outils pour afficher le graph<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALfind_point"><span class="keyword">val</span> find_point</span> : <code class="type">Types.point list -> int -> Types.point</code></pre><div class="info ">
+revoyer le point a partir de sa position<br>
+</div>
+
+<pre><span id="VALcalc_pos"><span class="keyword">val</span> calc_pos</span> : <code class="type">int -> int -> int -> int -> int</code></pre><div class="info ">
+calculer la position de la cordonne dans la fenetre<br>
+</div>
+
+<pre><span id="VALplot_point"><span class="keyword">val</span> plot_point</span> : <code class="type">int * int -> int * int -> Types.point -> unit</code></pre><div class="info ">
+dessiner les points dans la fenetre<br>
+</div>
+
+<pre><span id="VALplot_edge"><span class="keyword">val</span> plot_edge</span> : <code class="type">int * int -> int * int -> Types.point list -> int * int -> unit</code></pre><div class="info ">
+dessiner les trais dans la fenetre<br>
+</div>
+
+<pre><span id="VALplot_graph"><span class="keyword">val</span> plot_graph</span> : <code class="type">Types.graph -> unit list</code></pre><div class="info ">
+dessiner le graphe dans la fenetre<br>
+</div>
+
+<pre><span id="VALabs"><span class="keyword">val</span> abs</span> : <code class="type">int -> int</code></pre><div class="info ">
+la valeur absolue<br>
+</div>
+</body></html>
