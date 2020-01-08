@@ -8,8 +8,8 @@ prog : main.cmo
 enveloppe.cmo : types.cmo
 	ocamlc -c types.cmo enveloppe.ml
 
-main.cmo : types.cmo graph.cmo scanner.cmo enveloppe.cmo
-	ocamlc -c types.cmo graph.cmo scanner.cmo enveloppe.cmo main.ml
+main.cmo : types.cmo graph.cmo scanner.cmo enveloppe.cmo make_tree.cmo
+	ocamlc -c types.cmo graph.cmo scanner.cmo enveloppe.cmo make_tree.cmo main.ml
 
 types.cmo : types.ml
 	ocamlc -c types.ml
@@ -19,6 +19,9 @@ graph.cmo : types.cmo graph.ml
 
 scanner.cmo : types.cmo scanner.ml
 	ocamlc -c str.cma types.cmo scanner.ml
+
+make_tree.cmo : types.cmo enveloppe.cmo make_tree.ml
+	ocamlc -c types.cmo make_tree.ml
 
 # Clean
 clean:

@@ -42,10 +42,10 @@ let plot_graph = fun graph ->
     Graphics.set_line_width 2;
     List.map (plot_edge dx dy graph.points) graph.edges;
     Graphics.set_color Graphics.black;
-    List.map (plot_point dx dy) graph.points
+    List.map (plot_point dx dy) graph.points;;
 
 let abs = fun x ->
         if x>=0 then x
         else -x
 
-
+let clear () = Graphics.clear_graph ()

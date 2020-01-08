@@ -81,9 +81,10 @@ let enveloppe_convexe graphe =
     |h1::h2::t,acc when acc.i = (-1) -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot h1
     |h1::h2::t,acc -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot acc
     in construct graphe result pivot {i=(-1); x = 666; y = 666};;
-    
 
-
-
-
-  
+let enveloppe_convexe_2 result = 
+  let rec construct edges result acc = match result,acc with
+  |[h],acc -> (h.i, acc.i)::(edges)
+  |h1::h2::t,acc when acc.i = (-1) -> construct ((h1.i,h2.i)::edges) (h2::t) h1
+  |h1::h2::t,acc -> construct ((h1.i,h2.i)::edges) (h2::t) acc
+  in construct [] result {i=(-1); x = 666; y = 666};;
