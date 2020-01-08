@@ -109,9 +109,9 @@ let d = {i=4;x=1;y=1};;
 let e = {i=5;x=2;y=2};;
 let f = {i=6;x=2;y=1};;
 let g = {i=7;x=3;y=1};;
-let h = {i=8;x=5;y=(-1)};; 
+let h = {i=0;x=5;y=(-1)};; 
 
-let l_points = [a;b;c;d;e;f;g;h];;  
+let l_points = [h;a;b;c;d;e;f;g];;  
 
 let graphe_test = {points = l_points; edges= [] };; 
 

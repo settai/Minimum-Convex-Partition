@@ -14,3 +14,4 @@ type graph = {
 type triangle = point * point * point
 
 type polygone = int list
+

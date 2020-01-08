@@ -1,8 +1,8 @@
 open Types
-exception Poly_found of polygone
-
+open Evaluation
 open Enveloppe_convexe
 
+exception Poly_found of polygone
 exception Error;; 
 
 let vecteur = fun a b ->
@@ -289,7 +289,7 @@ let delaunay_to_polygones = fun points ->
     in
     to_polygones triangulation.arcs
 
-(* exist_in_poly : test si le trait (a,b) exist dans un polygone*)
+(* exist_in_poly : teste si le trait (a,b) existe dans un polygone*)
 let exists_in_poly = fun a b poly->
     (List.exists (fun x -> x=a) poly) && (List.exists (fun x -> x=b) poly)
 
@@ -302,7 +302,7 @@ let remove_poly = fun poly list_poly ->
         | p::ps -> remove_poly_rec ps (p::new_list)
     in remove_poly_rec list_poly []
 
-(* poly_to_edges : transforme un polygone à une liste des traits *)
+(* poly_to_edges : transforme un polygone en une liste des traits *)
 let poly_to_edges = fun polygone ->
     let rec poly_to_edges_rec = fun poly edges->
         match poly with 
@@ -311,13 +311,14 @@ let poly_to_edges = fun polygone ->
         | p1::p2::ps -> poly_to_edges_rec (p2::ps) ((p1,p2)::edges)
     in poly_to_edges_rec polygone []
 
-(* poly_reduction : parcours la lists des polygones et pour chaque edge commun entre deux polygone il essaie si on peut l'enlever tout en gardant la convexité, la liste des points sert pour retrouver les cordonnés des references*)
+(* poly_reduction : parcours la liste des polygones et pour chaque edge commun entre deux polygone il essaie si on peut l'enlever tout en gardant la convexité, la liste des points sert pour retrouver les cordonnés des references*)
 let poly_reduction = fun list_polygones points->
     let list_poly = ref list_polygones in
+    let reference= evaluer_poly (!list_poly) in
     let list_edges = List.concat (List.map poly_to_edges !list_poly) in
     let rec poly_reduction_rec = fun edges ->
         match edges with 
-        [] -> List.concat (List.map poly_to_edges !list_poly)
+        [] -> Printf.printf "%d  %f\n" (evaluer_poly !list_poly) ((float_of_int (evaluer_poly (!list_poly)))/.(float_of_int reference)); List.concat (List.map poly_to_edges !list_poly)
         | (a,b)::es ->  let p = List.filter (exists_in_poly a b) !list_poly in
                         begin 
                         match p with
@@ -328,4 +329,51 @@ let poly_reduction = fun list_polygones points->
                             poly_reduction_rec es
                         | _ -> poly_reduction_rec es
                         end
-    in poly_reduction_rec list_edges
+    in poly_reduction_rec list_edges;;
+
+
+
+
+
+
+let poly_red_alea = fun list_polygones points->
+    let list_poly = ref list_polygones in
+    let reference= evaluer_poly (!list_poly) in
+    let list_edges = List.concat (List.map poly_to_edges !list_poly) in
+    let rec poly_reduction_rec = fun edges le lp accTest accPoly solution deb ->
+        match deb with 
+        x when x=0-> Printf.printf "%d  %d  %f \n" (accPoly) accTest ((float_of_int accPoly)/.(float_of_int reference)); let lp =ref list_polygones in poly_reduction_rec edges le lp accTest accPoly solution 1
+        |_ -> if accTest=0 then solution else
+            begin
+                match edges with 
+                [] -> if (accPoly > (evaluer_poly !lp)) then poly_reduction_rec (random_liste le) (le) lp (accTest-1) (evaluer_poly !lp) (List.concat (List.map poly_to_edges !lp)) 0 else poly_reduction_rec (random_liste le) (le) lp (accTest-1) accPoly solution 0
+                |(a,b)::es ->  let p = List.filter (exists_in_poly a b) !lp in
+                                begin 
+                                match p with
+                                p1::p2::_ ->
+                                    let poly = poly_fusion p1 p2 in
+                                    if (is_convex points poly) then lp := (poly::(remove_poly p2 (remove_poly p1 !lp)));
+                                    poly_reduction_rec es le lp accTest accPoly solution 1
+                                | _ -> poly_reduction_rec es le lp accTest accPoly solution 1
+                                end;
+            end
+        in poly_reduction_rec list_edges list_edges  list_poly 1000 reference [] 0;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
