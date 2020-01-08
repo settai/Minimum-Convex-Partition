@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Types.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Make_tree" rel="Chapter" href="Make_tree.html">
+<link title="Types" rel="Chapter" href="Types.html"><title>Make_tree</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Types.html" title="Types">Next</a>
+</div>
+<h1>Module <a href="type_Make_tree.html">Make_tree</a></h1>
+
+<pre><span id="MODULEMake_tree"><span class="keyword">module</span> Make_tree</span>: <code class="code">sig</code> <a href="Make_tree.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Module permettant la recherche de la meilleur solution via la construction d'un arbre de possibilité. La construction de la solution se fait par ajout d'arrête.</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEarbre"><span class="keyword">type</span> <code class="type"></code>arbre</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTarbre.Vide"><span class="constructor">Vide</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>l'arbre vide</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTarbre.Node"><span class="constructor">Node</span></span> <span class="keyword">of</span> <code class="type"><a href="Types.html#TYPEedge">Types.edge</a> * <a href="Make_tree.html#TYPEarbre">arbre</a> list</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>le noeud de l'arbre est une arrête, les sous-arbres sont représentés par une liste d'arbre</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTarbre.End"><span class="constructor">End</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>arbre vide qui délimite une solution</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info ">
+<div class="info-desc">
+<p>Représentation de l'arbre des possibilités.</p>
+</div>
+</div>
+
+
+<pre><code><span id="TYPEpoint_graph"><span class="keyword">type</span> <code class="type"></code>point_graph</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpoint_graph.x">x</span>&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>x est l'absisse du point</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpoint_graph.y">y</span>&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>y est l'ordonné du point</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpoint_graph.indice">indice</span>&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>indice est l'indice du point</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpoint_graph.env">env</span>&nbsp;: <code class="type">bool</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>env est un booléen pour savoir si le point appartient à l'enveloppe convexe</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+<div class="info-desc">
+<p>Ce type est un point amélioré qui possède les même information que le point, l'appartenance à l'enveloppe convexe en plus.</p>
+</div>
+</div>
+
+
+<pre><span id="VALis_in_env_conv"><span class="keyword">val</span> is_in_env_conv</span> : <code class="type">'a -> 'a list -> bool</code></pre>
+<pre><span id="VALcreate_all_edges"><span class="keyword">val</span> create_all_edges</span> : <code class="type"><a href="Make_tree.html#TYPEpoint_graph">point_graph</a> list -> (int * int) array</code></pre>
+<pre><span id="VALconditions"><span class="keyword">val</span> conditions</span> : <code class="type">'a -> 'b -> 'c -> int</code></pre>
+<pre><span id="VALpt_to_ptgraph"><span class="keyword">val</span> pt_to_ptgraph</span> : <code class="type"><a href="Types.html#TYPEpoint">Types.point</a> list -> <a href="Types.html#TYPEpoint">Types.point</a> -> <a href="Make_tree.html#TYPEpoint_graph">point_graph</a></code></pre>
+<pre><span id="VALgen_arbre"><span class="keyword">val</span> gen_arbre</span> : <code class="type"><a href="Types.html#TYPEgraph">Types.graph</a> -> <a href="Types.html#TYPEpoint">Types.point</a> list -> <a href="Make_tree.html#TYPEarbre">arbre</a> list</code></pre>
+<pre><span id="VALget_sol"><span class="keyword">val</span> get_sol</span> : <code class="type"><a href="Make_tree.html#TYPEarbre">arbre</a> list -> <a href="Types.html#TYPEedge">Types.edge</a> list option</code></pre></body></html>
