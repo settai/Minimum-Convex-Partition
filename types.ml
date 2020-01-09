@@ -1,3 +1,5 @@
+type point_graph = {x: int; y: int; i: int; env: bool}
+
 type point = {
     i : int;
     x : int;
