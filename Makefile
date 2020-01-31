@@ -29,3 +29,10 @@ test_graph.cmo : types.cmo test_graph.ml
 # Clean
 clean:
 	rm -f prog *.cm[io] *~
+
+#test
+batterie_test.cmo: batterie_test.ml types.cmo make_tree.cmo graph.cmo
+	ocamlc -c batterie_test.ml
+
+tests: batterie_test.cmo
+	ocamlc -o tests $(Lib) types.cmo graph.cmo enveloppe.cmo test_graph.cmo make_tree.ml batterie_test.cmo

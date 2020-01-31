@@ -77,14 +77,14 @@ let enveloppe_convexe_graham graphe =
 let enveloppe_convexe graphe = 
     let result,pivot = enveloppe_convexe_graham graphe in 
     let rec construct graphe result pivot acc = match result,acc with
-    |[h],acc -> {points = (graphe.points) ; edges = (h.i, acc.i)::(graphe.edges)}
-    |h1::h2::t,acc when acc.i = (-1) -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot h1
-    |h1::h2::t,acc -> construct {points = (graphe.points) ; edges = (h1.i,h2.i)::(graphe.edges)} (h2::t) pivot acc
+    |[h],acc -> graphe
+    |h1::h2::t,acc when acc.i = (-1) -> construct {points = (graphe.points) ; edges = (h2.i,h1.i)::(h1.i,pivot.i)::(graphe.edges)} (h2::t) pivot h1
+    |h1::h2::t,acc -> construct {points = (graphe.points) ; edges = (h2.i,h1.i)::(graphe.edges)} (h2::t) pivot acc
     in construct graphe result pivot {i=(-1); x = 666; y = 666};;
 
-let enveloppe_convexe_2 result = 
-  let rec construct edges result acc = match result,acc with
-  |[h],acc -> (h.i, acc.i)::(edges)
-  |h1::h2::t,acc when acc.i = (-1) -> construct ((h1.i,h2.i)::edges) (h2::t) h1
-  |h1::h2::t,acc -> construct ((h1.i,h2.i)::edges) (h2::t) acc
-  in construct [] result {i=(-1); x = 666; y = 666};;
+let enveloppe_convexe_2 result pivot = 
+  let rec construct edges result pivot acc = match result,acc with
+  |[h],acc -> edges
+  |h1::h2::t,acc when acc = (-1) -> construct ((h2.i,h1.i)::(h1.i,pivot.i)::edges) (h2::t) pivot (h1.i)
+  |h1::h2::t,acc -> construct ((h2.i,h1.i)::edges) (h2::t) pivot acc
+  in construct [] result pivot (-1);;

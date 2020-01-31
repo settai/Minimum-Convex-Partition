@@ -27,7 +27,35 @@ let conditions list_pere pts_graph arrete pts_env= Test_graph.one_fct_to_rule_th
 
 let pt_to_ptgraph pts_env (pt:point) = {i=pt.i; x=pt.x; y=pt.y; env = (is_in_env_conv pt pts_env)}
 
-let gen_arbre graph pts_env= 
+let gen_arbre graph pts_env pivot= 
+  Printf.printf "generating tree ...\n";
+  let points_graph = List.map (pt_to_ptgraph pts_env) graph.points in
+  let all_edges = create_all_edges points_graph pts_env in
+  let rec aux edges k list_pere h minh=
+    let n = (Array.length edges - 1) in
+    let res = ref [] in
+    if k > n || h >= (!minh) then
+      res := [Vide]
+    else
+      for i=n downto k do
+        if h < (!minh) then
+        begin
+          let e = edges.(i) in
+          (*edges.(i) <- edges.(k);
+          edges.(k) <- e;*)
+          (*List.iter (fun (a,b) -> Printf.printf "(%d, %d) " a b) (e::list_pere); Printf.printf "\n";*)
+          match (conditions (e::list_pere) points_graph e pts_env) with
+          |j when j=0 -> res := (Node(e, (aux (Array.copy edges) (i+1) (e::list_pere) (h+1) minh)))::(!res)
+          |j when j=1 -> res := (Node(e, [End]))::(!res); minh := h
+          |_ (*when j=2*)-> if ((!res) = []) && (i=k) then res := [Vide]
+        end
+      done;
+    !res
+  in 
+aux all_edges 0 (Enveloppe.enveloppe_convexe_2 pts_env pivot) 0 (ref max_int);;
+
+let gen_arbre_g graph pts_env pivot = 
+  Printf.printf "generating tree ...\n";
   let points_graph = List.map (pt_to_ptgraph pts_env) graph.points in
   let all_edges = create_all_edges points_graph pts_env in
   let rec aux edges k list_pere h minh=
@@ -42,7 +70,7 @@ let gen_arbre graph pts_env=
           let e = edges.(i) in
           (*edges.(i) <- edges.(k);
           edges.(k) <- e;*)
-          List.iter (fun (a,b) -> Printf.printf "(%d, %d) " a b) (e::list_pere); Printf.printf "\n";
+          (*List.iter (fun (a,b) -> Printf.printf "(%d, %d) " a b) (e::list_pere); Printf.printf "\n";*)
           match (conditions (e::list_pere) points_graph e pts_env) with
           |j when j=0 -> res := (Node(e, (aux (Array.copy edges) (i+1) (e::list_pere) (h+1) minh)))::(!res)
           |j when j=1 -> res := (Node(e, [End]))::(!res); minh := h
@@ -51,7 +79,7 @@ let gen_arbre graph pts_env=
       done;
     !res
   in 
-  aux all_edges 0 (Enveloppe.enveloppe_convexe_2 pts_env) 0 (ref max_int);;
+aux all_edges 0 (Enveloppe.enveloppe_convexe_2 pts_env pivot) 0 (ref max_int);;
 
 let get_sol tree_l = 
   let rec parcours queue = 

@@ -1,6 +1,6 @@
 open Stack
 open Types
-(*open Enveloppe;;*)
+(*open Enveloppe*)
 
 
 exception Pite
@@ -165,7 +165,7 @@ let search_polygon (graphe_model:point_graph list array) (pts_tab:point_graph ar
             pt_prec := (!(pt_sauv));
             polygon := ((!pt)::(!polygon));
             pt_sauv := !pt;
-            flag := ((!flag) && ((!pt).env))
+            flag := ((!flag) && ((!pt).env));
         done;
         if (not (!flag)) then list_poly := ((!polygon)::(!list_poly));
         cas := 1
@@ -241,6 +241,37 @@ let one_fct_to_rule_them_all l_edges (pts_list:point_graph list) new_a pts_env=
               else 0;;
          
 
+let pts_env = [
+    {i=0; x=547; y=882;env=true};  
+    {i=5; x=877; y=928;env=true}; 
+    {i=6; x=934; y=879;env=true}; 
+    {i=7; x=555; y=682;env=true}; 
+    {i=8; x=846; y=91;env=true}];;
+ 
+let points = [|
+    {i=0; x=547; y=882;env=true}; 
+    {i=1; x=746; y=461;env=false}; 
+    {i=2; x=556; y=825;env=false}; 
+    {i=3; x=786; y=862;env=false}; 
+    {i=4; x=802; y=530;env=false}; 
+    {i=5; x=877; y=928;env=true}; 
+    {i=6; x=934; y=879;env=true}; 
+    {i=7; x=555; y=682;env=true}; 
+    {i=8; x=846; y=91;env=true}|];;
+
+let pts_list = [
+    {i=0; x=547; y=882;env=true}; 
+    {i=1; x=746; y=461;env=false}; 
+    {i=2; x=556; y=825;env=false}; 
+    {i=3; x=786; y=862;env=false}; 
+    {i=4; x=802; y=530;env=false}; 
+    {i=5; x=877; y=928;env=true}; 
+    {i=6; x=934; y=879;env=true}; 
+    {i=7; x=555; y=682;env=true}; 
+    {i=8; x=846; y=91;env=true}];;
+
+let edges = [(0, 2) ; (0,7) ; (1, 2) ; (1, 4); (1, 8); (7,8); (2, 7); (5,0) ; (3, 4); (8,6) ; (3, 5); (3, 8); (6,5) ; (4, 8)];;
+let edges2 = [(0, 2) ; (1, 2) ; (1, 4); (1, 8); (2, 7); (3, 4); (3, 5); (3, 8); (4, 8); (0,7) ; (7,8); (8,6) ; (6,5) ; (5,0) ];;
   
            
             
