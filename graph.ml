@@ -21,7 +21,9 @@ let plot_point = fun (xmin,xmax) (ymin,ymax) pt ->
     let posx = calc_pos pt.x xmin xmax (Graphics.size_x ()) in
     let posy = calc_pos pt.y ymin ymax (Graphics.size_y ()) in
     (*Printf.printf "%d, %d\n" posx posy; *)
-    Graphics.fill_circle posx posy 4
+    Graphics.fill_circle posx posy 4;
+    Graphics.moveto posx (posy+4);
+    Graphics.draw_char (char_of_int (48+pt.i))
 
 let plot_edge = fun (xmin,xmax) (ymin,ymax) pts (i,j) -> 
         let pi = find_point pts i and pj = find_point pts j in
@@ -40,9 +42,9 @@ let plot_graph = fun graph ->
     let dy = iter min ys, iter max ys in
     Graphics.set_color Graphics.blue;
     Graphics.set_line_width 2;
-    List.map (plot_edge dx dy graph.points) graph.edges;
+    List.iter (plot_edge dx dy graph.points) graph.edges;
     Graphics.set_color Graphics.black;
-    List.map (plot_point dx dy) graph.points;;
+    List.iter (plot_point dx dy) graph.points;;
 
 let abs = fun x ->
         if x>=0 then x
