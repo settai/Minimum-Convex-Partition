@@ -1,6 +1,6 @@
 open Stack
 open Types
-(*open Enveloppe*)
+(*open Enveloppe;;*)
 
 
 exception Pite
@@ -125,7 +125,7 @@ let spaa l_edges pts_tab =
     in aux l_edges pts_tab 0;;
 
 
-let turn_right (pt:point_graph) (pts_tab:point_graph array) graphe_model (pt_prec:point_graph) =
+let turn_right (pt:point_graph) graphe_model (pt_prec:point_graph) =
     let n = {i=999; x = pt.y - (pt_prec.y); y = (pt_prec.x) - pt.x} and u = {i=999; x = pt.x - (pt_prec.x); y = pt.y - (pt_prec.y)} in
     let rec parcours (liste_v:point_graph list) (n:point) (u:point) (max_pos:point_graph*float*float) (max_neg:point_graph*float*float) flag = match liste_v with
     |[] -> max_pos,max_neg,flag 
@@ -148,7 +148,7 @@ let turn_right (pt:point_graph) (pts_tab:point_graph array) graphe_model (pt_pre
     let max_pos,max_neg,flag = parcours graphe_model.(pt.i) n u (pt_prec,(-1.),0.) (pt,1.,0.) false 
     in
     if flag then let pt_res,_,_ = max_pos in pt_res else let pt_res,_,_ = max_neg in pt_res;;
-
+(*
 let search_polygon (graphe_model:point_graph list array) (pts_tab:point_graph array) n = 
     let list_poly = (ref []) and cas = ref 0 in 
     for i = 0 to (n-1) do
@@ -165,7 +165,7 @@ let search_polygon (graphe_model:point_graph list array) (pts_tab:point_graph ar
             pt_prec := (!(pt_sauv));
             polygon := ((!pt)::(!polygon));
             pt_sauv := !pt;
-            flag := ((!flag) && ((!pt).env));
+            flag := ((!flag) && ((!pt).env))
         done;
         if (not (!flag)) then list_poly := ((!polygon)::(!list_poly));
         cas := 1
@@ -192,8 +192,45 @@ let search_polygon (graphe_model:point_graph list array) (pts_tab:point_graph ar
         (* On ne supprime volontairement pas les doublons car complexité de is_convex  en nlogn et complexite pour supprimer doublon en n**2*)
     done;
         !list_poly;;
+*)
+(*
+let parcours (graphe_model:point_graph list array) (pt1:point_graph) (pt2:point_graph) =
+    let polygon = ref [] in 
+    let pt = (ref pt2) and pt_prec = (ref pt1) and pt_base = pt1 and pt_sauv = (ref pt2) in
+    let flag = (ref (( ((!pt).env) && (pt_base.env) ))) in  
+    while ((!pt).i <> pt_base.i) do
+        pt := (turn_right (!pt) graphe_model (!pt_prec));
+        pt_prec := (!(pt_sauv));
+        polygon := ((!pt)::(!polygon));
+        pt_sauv := !pt;
+        flag := ((!flag) && ((!pt).env))
+    done;(!flag,!polygon);;
+*)
+       
+let search_polygon2 (graphe_model:point_graph list array) (pts_tab:point_graph array) l_edges =
+    let parcours (graphe_model:point_graph list array) (pt1:point_graph) (pt2:point_graph) = 
+    let pt = (ref pt2) and pt_prec = (ref pt1) and pt_base = pt1 and pt_sauv = (ref pt2) in
+    let flag = (ref (( ((!pt).env) && (pt_base.env) ))) and polygon = (ref [(!pt)]) in  
+    while ((!pt).i <> pt_base.i) do
+        pt := (turn_right (!pt) graphe_model (!pt_prec));
+        pt_prec := (!(pt_sauv));
+        polygon := ((!pt)::(!polygon));
+        pt_sauv := !pt;
+        flag := ((!flag) && ((!pt).env))
+    done;(!flag,!polygon)
+    in
+    let rec aux graphe_model pts_tab l_edges list_poly = match l_edges with
+    |(h1,h2)::t when ((pts_tab.(h1).env && pts_tab.(h2).env)) -> list_poly
+    |(h1,h2)::t  ->  let lpol = (ref list_poly) in
+                     let flag1,poly1 = (parcours graphe_model pts_tab.(h1) pts_tab.(h2)) 
+                     and flag2,poly2 = (parcours graphe_model pts_tab.(h2) pts_tab.(h1))
+                     in
+                     if (not flag1) then lpol := ((poly1)::(!lpol));
+                     if (not flag2) then lpol := ((poly2)::(!lpol));
+                     (aux graphe_model pts_tab t (!lpol))
+    |_ -> failwith("tamer")
+    in aux graphe_model pts_tab l_edges [];;    
 
- 
 let is_convex = fun (poly:point_graph list)->
     let zcrossproduct = fun (p1:point_graph) (p2:point_graph) (p3:point_graph) ->
         let dx1 = p3.x - p2.x and dy1 = p3.y - p2.y in
@@ -216,9 +253,9 @@ let is_convex = fun (poly:point_graph list)->
                                     else is_convex_rec (p2::p3::ps)
         in is_convex_rec poly;;
 
-let all_convex (graphe_model:point_graph list array) (pts_tab:point_graph array) =
+let all_convex (graphe_model:point_graph list array) (pts_tab:point_graph array) l_edges =
     let n = (Array.length graphe_model) in 
-    let list_poly = (search_polygon graphe_model pts_tab n) in
+    let list_poly = (search_polygon2 graphe_model pts_tab l_edges) in
     let rec parcours (list_poly:point_graph list list) = match list_poly with 
     |[] -> true
     |h::t when (not (is_convex h)) -> false
@@ -236,46 +273,67 @@ let one_fct_to_rule_them_all l_edges (pts_list:point_graph list) new_a pts_env=
           if not (spaa l_edges pts_tab) then 0
           else 
               if (dfs graphe_model) then
-                  if (all_convex graphe_model pts_tab) then 1
+                  if (all_convex graphe_model pts_tab l_edges) then 1
                   else 0
               else 0;;
          
 
-let pts_env = [
-    {i=0; x=547; y=882;env=true};  
-    {i=5; x=877; y=928;env=true}; 
-    {i=6; x=934; y=879;env=true}; 
-    {i=7; x=555; y=682;env=true}; 
-    {i=8; x=846; y=91;env=true}];;
+(*test
+
+let eliminer_doublon list_poly =
+    let rec in_list x l = match l with   
+    |[] -> false 
+    |h::t when equal  -> true
+    |h::t -> in_list x t
+    in
+    let rec aux list_poly = match list_poly with
+    |[] -> list_poly
+    |h::t when (in_list h t) -> aux t
+    |h::t -> (h::(aux t))
+    in aux list_poly;;
+      
+       
+let pts_tab = 
+    [|{i=0; x=714; y=350;env=false}; 
+    {i=1; x=986; y=271;env=true}; 
+    {i=2; x=502; y=327;env=false}; 
+    {i=3; x=25; y=139;env=true}; 
+    {i=4; x=566; y=196;env=false}; 
+    {i=5; x=468; y=993;env=true}; 
+    {i=6; x=864; y=836;env=true}; 
+    {i=7; x=865; y=20;env=true}; 
+    {i=8; x=902; y=722;env=true}; 
+    {i=9; x=554; y=741;env=false}|];;
+
+let pts_list = 
+    [{i=0; x=714; y=350;env=false}; 
+    {i=1; x=986; y=271;env=true}; 
+    {i=2; x=502; y=327;env=false}; 
+    {i=3; x=25; y=139;env=true}; 
+    {i=4; x=566; y=196;env=false}; 
+    {i=5; x=468; y=993;env=true}; 
+    {i=6; x=864; y=836;env=true}; 
+    {i=7; x=865; y=20;env=true}; 
+    {i=8; x=902; y=722;env=true}; 
+    {i=9; x=554; y=741;env=false}];;
+
  
-let points = [|
-    {i=0; x=547; y=882;env=true}; 
-    {i=1; x=746; y=461;env=false}; 
-    {i=2; x=556; y=825;env=false}; 
-    {i=3; x=786; y=862;env=false}; 
-    {i=4; x=802; y=530;env=false}; 
-    {i=5; x=877; y=928;env=true}; 
-    {i=6; x=934; y=879;env=true}; 
-    {i=7; x=555; y=682;env=true}; 
-    {i=8; x=846; y=91;env=true}|];;
+let pts_env = [(3, 7); (7, 1); (1, 8); (8, 6); (6, 5); (5, 3)];;
 
-let pts_list = [
-    {i=0; x=547; y=882;env=true}; 
-    {i=1; x=746; y=461;env=false}; 
-    {i=2; x=556; y=825;env=false}; 
-    {i=3; x=786; y=862;env=false}; 
-    {i=4; x=802; y=530;env=false}; 
-    {i=5; x=877; y=928;env=true}; 
-    {i=6; x=934; y=879;env=true}; 
-    {i=7; x=555; y=682;env=true}; 
-    {i=8; x=846; y=91;env=true}];;
+let l_edges = [(0, 4); (0, 7); (0, 9); (2, 3); (2, 4); (2, 5); (4, 9); (5, 9); (3, 7);
+ (7, 1); (1, 8); (8, 6); (6, 5); (5, 3)];;
+ 
 
-let edges = [(0, 2) ; (0,7) ; (1, 2) ; (1, 4); (1, 8); (7,8); (2, 7); (5,0) ; (3, 4); (8,6) ; (3, 5); (3, 8); (6,5) ; (4, 8)];;
-let edges2 = [(0, 2) ; (1, 2) ; (1, 4); (1, 8); (2, 7); (3, 4); (3, 5); (3, 8); (4, 8); (0,7) ; (7,8); (8,6) ; (6,5) ; (5,0) ];;
-  
-           
+let aff (l:point_graph list list) = List.map (fun (l2:point_graph list) -> List.map (fun {i=i;x=x;y=y;env=env} -> i) l2) l;;      
             
-                 
+let l = [[5; 2; 4; 9];
+ [6; 5; 9; 0; 7; 1; 8];
+ [4; 0; 9]; 
+ [3; 2; 5]
+ [2; 3; 7; 0; 4]]
+
+)
+*)
         
                
      
