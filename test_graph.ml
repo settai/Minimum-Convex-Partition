@@ -220,7 +220,7 @@ let search_polygon2 (graphe_model:point_graph list array) (pts_tab:point_graph a
     done;(!flag,!polygon)
     in
     let rec aux graphe_model pts_tab l_edges list_poly = match l_edges with
-    |(h1,h2)::t when ((pts_tab.(h1).env && pts_tab.(h2).env)) -> list_poly
+    |[] -> list_poly
     |(h1,h2)::t  ->  let lpol = (ref list_poly) in
                      let flag1,poly1 = (parcours graphe_model pts_tab.(h1) pts_tab.(h2)) 
                      and flag2,poly2 = (parcours graphe_model pts_tab.(h2) pts_tab.(h1))
@@ -230,6 +230,7 @@ let search_polygon2 (graphe_model:point_graph list array) (pts_tab:point_graph a
                      (aux graphe_model pts_tab t (!lpol))
     |_ -> failwith("tamer")
     in aux graphe_model pts_tab l_edges [];;    
+
 
 let is_convex = fun (poly:point_graph list)->
     let zcrossproduct = fun (p1:point_graph) (p2:point_graph) (p3:point_graph) ->

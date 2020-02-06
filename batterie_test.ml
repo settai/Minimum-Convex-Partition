@@ -29,23 +29,27 @@ let () =
   Graph.plot_graph {points=points; edges = env_edges};
   ignore(Graphics.wait_next_event [Key_pressed]);
 
-  
+  let t0 = Sys.time () in
   let arbre_d = gen_arbre vide env pivot in
   let (Some sol_d) = get_sol arbre_d in
+  Printf.printf "Time droite: %f\n" (Sys.time() -. t0);
   Graph.plot_graph ({points=points; edges=sol_d});
   Printf.printf "droit: %d\n" (one_fct_to_rule_them_all (sol_d@env_edges) pts_graph (List.hd (sol_d@env_edges)) env);
   Printf.printf "["; List.iter (fun (i,j) -> Printf.printf "(%d, %d); " i j) sol_d; Printf.printf "]\n";
   ignore(Graphics.wait_next_event [Key_pressed]);
 
-  (*
+  
+  let t1 = Sys.time () in
   let arbre_g = gen_arbre_g vide env pivot in
   let (Some sol_g) = get_sol arbre_g in
+  Printf.printf "Time gauche: %f\n" (Sys.time() -. t1);
+  Graph.clear ();
   Graph.plot_graph {points=points; edges=env_edges};
   Graph.plot_graph ({points = vide.points; edges=sol_g});
   Printf.printf "gauche: %d\n" (one_fct_to_rule_them_all (sol_g@env_edges) pts_graph (List.hd (sol_g@env_edges)) env);
   Printf.printf "["; List.iter (fun (i,j) -> Printf.printf "(%d, %d); " i j) sol_g; Printf.printf "]\n";
   ignore(Graphics.wait_next_event [Key_pressed]);
-  Graph.clear ();*)
+  Graph.clear ();
 
   
 
